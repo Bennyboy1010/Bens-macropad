@@ -3,7 +3,7 @@
 
 Macro pad for MSFS2024 and other games.
 
-Ignore the code pls. Its takeing me a long time to figure out how to code and with the time restrictions I wont be able to finish it in time.
+Ignore the code pls. Its taking me a long time to figure out how to code and with the time restrictions I wont be able to finish it in time.
 
 
 BOM
