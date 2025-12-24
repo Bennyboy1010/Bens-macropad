@@ -1,0 +1,67 @@
+#include <Keyboard.h>
+
+// ===== MATRIX SIZE =====
+const uint8_t ROWS = 4;
+const uint8_t COLS = 4;
+
+// ===== PIN ASSIGNMENTS =====
+// Vertical columns (inputs)
+uint8_t colPins[COLS] = {1, 2, 3, 4};
+
+// Horizontal rows (outputs)
+uint8_t rowPins[ROWS] = {5, 6, 7, 8};
+
+// ===== KEY MAP =====
+// Change these to whatever macros you want
+char keymap[ROWS][COLS] = {
+  {'1', '2', '3', '4'},
+  {'5', '6', '7', '8'},
+  {'9', '0', 'a', 'b'},
+  {'c', 'd', 'e', 'f'}
+};
+
+// Track key states
+bool keyPressed[ROWS][COLS] = {false};
+
+void setup() {
+  Keyboard.begin();
+
+  // Set row pins as outputs (inactive HIGH)
+  for (uint8_t r = 0; r < ROWS; r++) {
+    pinMode(rowPins[r], OUTPUT);
+    digitalWrite(rowPins[r], HIGH);
+  }
+
+  // Set column pins as inputs with pull-ups
+  for (uint8_t c = 0; c < COLS; c++) {
+    pinMode(colPins[c], INPUT_PULLUP);
+  }
+}
+
+void loop() {
+  for (uint8_t r = 0; r < ROWS; r++) {
+
+    // Activate current row
+    digitalWrite(rowPins[r], LOW);
+
+    for (uint8_t c = 0; c < COLS; c++) {
+      bool isPressed = (digitalRead(colPins[c]) == LOW);
+
+      if (isPressed && !keyPressed[r][c]) {
+        // New key press detected
+        Keyboard.press(keymap[r][c]);
+        delay(10); // debounce
+        Keyboard.release(keymap[r][c]);
+        keyPressed[r][c] = true;
+      }
+
+      if (!isPressed && keyPressed[r][c]) {
+        // Key released
+        keyPressed[r][c] = false;
+      }
+    }
+
+    // Deactivate row
+    digitalWrite(rowPins[r], HIGH);
+  }
+}
